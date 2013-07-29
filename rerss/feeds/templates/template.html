@@ -2,14 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ReRSS{% endblock %}</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}css/rerss.css" rel="stylesheet"/>
   </head>
   <body>
-    <div>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">ReRSS</a>
+      </div>
+    </div>
+    <div class="container">
 {% block body %}{% endblock %}
     </div>
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}js/rerss.js"></script>
   </body>
 </html>

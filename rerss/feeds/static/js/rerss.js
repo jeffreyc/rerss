@@ -23,7 +23,7 @@ function add() {
               $('#empty').remove();
               $('tbody').append(
                 '          <tr id="row' + data.id + '">\n' +
-                '            <td><a href="/feed/' + data.id + '">' + data.title + ' (' + data.link + ')</a></td>\n' +
+                '            <td><a href="/feed/' + data.id + '"><abbr title="' + data.link + '">' + data.title + '</abbr></a></td>\n' +
                 '            <td><a href="#" onclick="remove(' + data.id + ')">X</a></td>\n' +
                 '          </tr>\n');
               $('#add').val('');

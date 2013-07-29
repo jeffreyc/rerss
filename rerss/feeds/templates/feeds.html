@@ -3,30 +3,32 @@
 {% block title %}ReRSS Feeds{% endblock %}
 
 {% block body %}
-      <table>
-        <thead>
-          <tr>
-            <td>Feed</td>
-            <td>Remove</td>
-          </tr>
-        </thead>
-        <tbody>
-          {% for feed in feeds %}
-          <tr id="row{{ feed.id }}">
-            <td><a href="{% url feed key=feed.id %}">{{ feed.title }} ({{ feed.link }})</a></td>
-            <td><a href="#" onclick="remove({{ feed.id }})">X</a></td>
-          </tr>
-          {% empty %}
-          <tr id="empty">
-            <td colspan="2">No feeds are subscribed.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <br/>
-      <form id="addForm" action="#">
-        <input type="text" name="add" id="add" placeholder="Add a feed..."/>
-        {% csrf_token %}
-        <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
-      </form>
+      <div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <td>Feed</td>
+              <td>Remove</td>
+            </tr>
+          </thead>
+          <tbody>
+            {% for feed in feeds %}
+            <tr id="row{{ feed.id }}">
+              <td><a href="{% url feed key=feed.id %}"><abbr title="{{ feed.link }}">{{ feed.title }}</abbr></a></td>
+              <td><a href="#" onclick="remove({{ feed.id }})">X</a></td>
+            </tr>
+            {% empty %}
+            <tr id="empty">
+              <td colspan="2">No feeds are subscribed.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <br/>
+        <form id="addForm" action="#">
+          <input class="form-control" type="text" name="add" id="add" placeholder="Add a feed..."/>
+          {% csrf_token %}
+          <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+        </form>
+      </div>
 {% endblock %}
