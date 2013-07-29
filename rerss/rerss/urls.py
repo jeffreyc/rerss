@@ -1,17 +1,12 @@
-from django.conf.urls import patterns, include, url
+from django.conf import urls
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from feeds import views
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'rerss.views.home', name='home'),
-    # url(r'^rerss/', include('rerss.foo.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+urlpatterns = urls.patterns(
+    '',
+    urls.url(r'^$', 'feeds.views.index', name='index'),
+    urls.url(r'^feed/$', 'feeds.views.feed', name='feed_api'),
+    urls.url(r'^feed/(?P<key>[a-zA-Z0-9]+)/$', views.Feed(), name='feed'),
+    urls.url(r'^feeds/$', 'feeds.views.feeds', name='feeds'),
 )
