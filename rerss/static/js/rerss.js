@@ -24,7 +24,7 @@ function add() {
               $('tbody').append(
                 '          <tr id="row' + data.id + '">\n' +
                 '            <td><a href="/feed/' + data.id + '"><abbr title="' + data.link + '">' + data.title + '</abbr></a></td>\n' +
-                '            <td><a href="#" onclick="remove(' + data.id + ')">X</a></td>\n' +
+                '            <td><a href="#" onclick="remove(' + data.id + ')"><span class="glyphicon glyphicon-remove"></span></a></td>\n' +
                 '          </tr>\n');
               $('#add').val('');
               $('#addForm').removeClass('has-error');

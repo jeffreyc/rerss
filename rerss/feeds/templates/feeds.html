@@ -15,7 +15,7 @@
             {% for f in feeds %}
             <tr id="row{{ f.key.id }}">
               <td><a href="{% url 'feed' key=f.key.id %}"><abbr title="{{ f.link }}">{{ f.title }}</abbr></a></td>
-              <td><a href="#" onclick="remove({{ f.key.id }})">X</a></td>
+              <td><a href="#" onclick="remove({{ f.key.id }})"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>
             {% empty %}
             <tr id="empty">
