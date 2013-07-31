@@ -1,26 +1,20 @@
-from django.db import models
+from google.appengine.ext import db
 
 
-class Feed(models.Model):
-    description = models.CharField(max_length=1024, null=True)
-    link = models.URLField()
-    title = models.CharField(max_length=1024, null=True)
-    pubdate = models.DateTimeField(null=True)
-    established = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['title',]
+class Feed(db.Model):
+    description = db.TextProperty()
+    link = db.LinkProperty()
+    title = db.StringProperty()
+    pubdate = db.DateTimeProperty()
+    established = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)
 
 
-class Item(models.Model):
-    description = models.CharField(max_length=1024)
-    link = models.URLField()
-    title = models.CharField(max_length=1024)
-    pubdate = models.DateTimeField()
-    feed = models.ForeignKey(Feed, related_name='items')
-    established = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['feed', '-pubdate',]
+class Item(db.Model):
+    description = db.TextProperty()
+    link = db.LinkProperty()
+    title = db.StringProperty()
+    pubdate = db.DateTimeProperty()
+    feed = db.ReferenceProperty(Feed)
+    established = db.DateTimeProperty(auto_now_add=True)
+    modified = db.DateTimeProperty(auto_now=True)

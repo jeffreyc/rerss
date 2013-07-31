@@ -27,9 +27,14 @@ function add() {
                 '            <td><a href="#" onclick="remove(' + data.id + ')">X</a></td>\n' +
                 '          </tr>\n');
               $('#add').val('');
+              $('#addForm').removeClass('has-error');
             },
             304: function() {
               $('#add').val('');
+              $('#addForm').removeClass('has-error');
+            },
+            500: function() {
+              $('#addForm').addClass('has-error');
             }
           },
           type: 'PUT'});

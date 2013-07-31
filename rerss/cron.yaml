@@ -1,0 +1,4 @@
+cron:
+- description: Updates feeds.
+  url: /harvester
+  schedule: every 1 hours

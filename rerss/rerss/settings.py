@@ -1,5 +1,6 @@
 # Django settings for rerss project.
 
+KEEP_FOR = 30
 MAX_ITEMS = 1000
 
 DEBUG = True
@@ -11,17 +12,17 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'rerss.db', # Or path to database file if using sqlite3.
-        'USER': '',         # Not used with sqlite3.
-        'PASSWORD': '',     # Not used with sqlite3.
-        'HOST': '',         # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',         # Set to empty string for default. Not used with sqlite3.
-    }
-}
+#DATABASES = {
+#    'default': {
+#        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': 'rerss.db', # Or path to database file if using sqlite3.
+#        'USER': '',         # Not used with sqlite3.
+#        'PASSWORD': '',     # Not used with sqlite3.
+#        'HOST': '',         # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '',         # Set to empty string for default. Not used with sqlite3.
+#    }
+#}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -103,7 +104,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'rerss.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'rerss.wsgi.application'
+#WSGI_APPLICATION = 'rerss.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -115,7 +116,7 @@ INSTALLED_APPS = (
     #'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     #'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:

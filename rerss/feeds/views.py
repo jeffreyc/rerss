@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.syndication import views as sv
 from django.core import urlresolvers
 from django.utils import feedgenerator
+from google.appengine.ext import db
 
 from feeds import models
 
@@ -19,12 +20,12 @@ def feed(request):
     """
     params = http.QueryDict(request.body, request.encoding)
     if request.method == 'PUT':
-        feed, cre = models.Feed.objects.get_or_create(link=params['link'],
-                                                      title='Update pending...')
-        if cre:
-            return http.HttpResponse(json.dumps({'id': feed.pk,
-                                                 'link': feed.link,
-                                                 'title': feed.title}),
+        if db.Query(models.Feed).filter('link = ', params['link']).count() == 0:
+            f = models.Feed(link=params['link'], title='Update pending...')
+            f.put()
+            return http.HttpResponse(json.dumps({'id': f.key().id(),
+                                                 'link': f.link,
+                                                 'title': f.title}),
                                      mimetype='application/json')
         else:
             return http.HttpResponseNotModified()
@@ -33,9 +34,13 @@ def feed(request):
         pass
     elif request.method == 'DELETE':
         try:
-            models.Feed.objects.get(pk=params['id']).delete()
+            f = models.Feed.get_by_id(int(params['id']))
+            db.delete(models.Item.all(keys_only=True).filter('feed = ', f))
+            f.delete()
             return http.HttpResponse()
-        except models.Feed.DoesNotExist:
+        except ValueError:
+            return http.HttpResponseBadRequest()
+        except db.NotSavedError:
             return http.HttpResponseNotModified()
     else:
         return http.HttpResponseRedirect(urlresolvers.reverse('feeds'))
@@ -44,7 +49,8 @@ def feed(request):
 def feeds(request):
     """A view to display all available feeds."""
     return shortcuts.render(request, 'feeds.html',
-                            {'feeds': models.Feed.objects.all()})
+                            {'feeds':
+                             models.Feed.all().order('title').order('link')})
 
 
 def index(request):
@@ -58,10 +64,17 @@ class Feed(sv.Feed):
     https://docs.djangoproject.com/en/1.5/ref/contrib/syndication/
 
     """
-    feed_type = feedgenerator.Atom1Feed
+    feed_type = feedgenerator.Rss201rev2Feed
 
     def get_object(self, request, key):
-        return shortcuts.get_object_or_404(models.Feed, pk=key)
+        try:
+            obj = models.Feed.get_by_id(int(key))
+            if obj:
+                return obj
+            else:
+                return http.HttpResponseNotFound()
+        except ValueError:
+            return http.HttpResponseBadRequest()
 
     def title(self, obj):
         return obj.title
@@ -73,8 +86,10 @@ class Feed(sv.Feed):
         return obj.description
 
     def items(self, obj):
-        return models.Item.objects.filter(
-            feed=obj).order_by('-pubdate')[:settings.MAX_ITEMS]
+        items = db.Query(models.Item)
+        items.filter('feed = ', obj)
+        items.order('-pubdate')
+        return items.run(limit=settings.MAX_ITEMS)
 
     def item_description(self, obj):
         return obj.description

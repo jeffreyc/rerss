@@ -1,0 +1,21 @@
+application: re-rss
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /harvester
+  script: feeds.harvester.application
+  login: admin
+- url: /static
+  static_dir: static
+- url: /.*
+  script: app.application
+
+libraries:
+- name: django
+  version: "1.5"
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: "rerss.settings"

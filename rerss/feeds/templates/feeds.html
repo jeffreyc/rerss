@@ -12,10 +12,10 @@
             </tr>
           </thead>
           <tbody>
-            {% for feed in feeds %}
-            <tr id="row{{ feed.id }}">
-              <td><a href="{% url feed key=feed.id %}"><abbr title="{{ feed.link }}">{{ feed.title }}</abbr></a></td>
-              <td><a href="#" onclick="remove({{ feed.id }})">X</a></td>
+            {% for f in feeds %}
+            <tr id="row{{ f.key.id }}">
+              <td><a href="{% url 'feed' key=f.key.id %}"><abbr title="{{ f.link }}">{{ f.title }}</abbr></a></td>
+              <td><a href="#" onclick="remove({{ f.key.id }})">X</a></td>
             </tr>
             {% empty %}
             <tr id="empty">
