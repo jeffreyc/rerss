@@ -4,4 +4,3 @@ syntax: glob
 *.pyc
 *~
 .DS_Store
-rerss.db
