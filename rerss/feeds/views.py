@@ -12,6 +12,13 @@ from google.appengine.ext import db
 from feeds import models
 
 
+def feed_response(f):
+    return http.HttpResponse(json.dumps({'id': f.key().id(),
+                                         'link': f.link,
+                                         'title': f.title}),
+                             mimetype='application/json')
+
+
 def feed(request):
     """A view to support creating, modifying, and deleting feeds.
 
@@ -51,13 +58,6 @@ def feed(request):
             return http.HttpResponseNotModified()
     else:
         return http.HttpResponseRedirect(urlresolvers.reverse('feeds'))
-
-
-def feed_response(f):
-    return http.HttpResponse(json.dumps({'id': f.key().id(),
-                                         'link': f.link,
-                                         'title': f.title}),
-                             mimetype='application/json')
 
 
 def feeds(request):
