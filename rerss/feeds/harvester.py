@@ -23,8 +23,10 @@ class Harvester(webapp2.RequestHandler):
         feeds = models.Feed.all()
         for feed in feeds:
             try:
+                logging.debug('Updating "%s"' % feed.link)
                 d = feedparser.parse(feed.link)
                 if not d.feed:
+                    logging.info('"%s" not found, skipping' % feed.link)
                     continue
                 if d.feed.has_key('updated_parsed'):
                     dt = datetime_from_parsed(d.feed.updated_parsed)
@@ -32,10 +34,12 @@ class Harvester(webapp2.RequestHandler):
                     dt = datetime_from_parsed(d.feed.published_parsed)
                 else:
                     dt = datetime.datetime.now()
-                if True or feed.pubdate is None or dt > feed.pubdate:
+                if feed.pubdate is None or dt > feed.pubdate:
                     self.update_datastore(feed, d, dt)
+                else:
+                    logging.info('"%s" < "%s", skipping' % (dt, feed.pubdate))
             except Exception:
-                logging.error('Exception processing %s:\n%r' %
+                logging.error('Exception processing "%s":\n%r' %
                               (feed.link, traceback.format_exc()))
                 pass
         self.purge_old_items()
@@ -55,12 +59,14 @@ class Harvester(webapp2.RequestHandler):
         db.delete(f)
 
     def update_datastore(self, feed, d, dt):
+        logging.debug('Updating %s' % feed)
         if d.feed.description:
             feed.description = d.feed.description
         if d.feed.title:
             feed.title = d.feed.title
         feed.pubdate = dt
         for entry in d.entries:
+            logging.debug('Adding/updating %s' % entry.title)
             if entry.has_key('updated_parsed'):
                 et = datetime_from_parsed(entry.updated_parsed)
             elif entry.has_key('published_parsed'):
