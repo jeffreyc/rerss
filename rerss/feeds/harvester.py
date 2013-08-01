@@ -61,10 +61,12 @@ class Harvester(webapp2.RequestHandler):
             feed.title = d.feed.title
         feed.pubdate = dt
         for entry in d.entries:
-            if entry.updated_parsed:
+            if entry.has_key('updated_parsed'):
                 et = datetime_from_parsed(entry.updated_parsed)
-            else:
+            elif entry.has_key('published_parsed'):
                 et = datetime_from_parsed(entry.published_parsed)
+            else:
+                et = datetime.datetime.now()
             i = db.Query(models.Item)
             i.filter('feed =', feed)
             i.filter('link =', entry.link)
