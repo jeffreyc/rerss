@@ -15,6 +15,23 @@ indexes:
   - name: title
   - name: link
 
+- kind: Feed
+  properties:
+  - name: user
+  - name: title
+  - name: link
+
+- kind: Feed
+  properties:
+  - name: usercount
+  - name: modified
+
+- kind: Feed
+  properties:
+  - name: users
+  - name: title
+  - name: link
+
 - kind: Item
   properties:
   - name: feed

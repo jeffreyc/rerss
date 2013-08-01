@@ -19,6 +19,7 @@ def datetime_from_parsed(parsed):
 
 class Harvester(webapp2.RequestHandler):
     def get(self):
+        self.purge_unattached_feeds_and_items()
         feeds = models.Feed.all()
         for feed in feeds:
             try:
@@ -27,8 +28,10 @@ class Harvester(webapp2.RequestHandler):
                     continue
                 if d.feed.has_key('updated_parsed'):
                     dt = datetime_from_parsed(d.feed.updated_parsed)
-                else:
+                elif d.feed.has_key('published_parsed'):
                     dt = datetime_from_parsed(d.feed.published_parsed)
+                else:
+                    dt = datetime.datetime.now()
                 if True or feed.pubdate is None or dt > feed.pubdate:
                     self.update_datastore(feed, d, dt)
             except Exception:
@@ -38,8 +41,18 @@ class Harvester(webapp2.RequestHandler):
         self.purge_old_items()
 
     def purge_old_items(self):
-        before = datetime.datetime.now() - datetime.timedelta(settings.KEEP_FOR)
+        before = datetime.datetime.now() - \
+                 datetime.timedelta(days=settings.KEEP_FOR)
         db.delete(models.Item.all(keys_only=True).filter('pubdate <=', before))
+
+    def purge_unattached_feeds_and_items(self):
+        before = datetime.datetime.now() - \
+                 datetime.timedelta(minutes=settings.PURGE_DELAY)
+        f = models.Feed.all(keys_only=True)
+        f.filter('usercount =', 0).filter('modified <=', before)
+        for feed in f.run():
+            db.delete(models.Item.all(keys_only=True).filter('feed =', feed))
+        db.delete(f)
 
     def update_datastore(self, feed, d, dt):
         if d.feed.description:
@@ -53,11 +66,12 @@ class Harvester(webapp2.RequestHandler):
             else:
                 et = datetime_from_parsed(entry.published_parsed)
             i = db.Query(models.Item)
-            i.filter('feed = ', feed)
-            i.filter('link = ', entry.link)
+            i.filter('feed =', feed)
+            i.filter('link =', entry.link)
             i.ancestor(feed.key())
             if i.count() == 0:
-                item = models.Item(feed=feed, link=entry.link, title=entry.title,
+                item = models.Item(feed=feed, link=entry.link,
+                                   title=entry.title,
                                    description=entry.description, pubdate=et)
                 item.put()
             else:

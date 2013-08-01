@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.syndication import views as sv
 from django.core import urlresolvers
 from django.utils import feedgenerator
+from google.appengine.api import users
 from google.appengine.ext import db
 
 from feeds import models
@@ -19,25 +20,31 @@ def feed(request):
 
     """
     params = http.QueryDict(request.body, request.encoding)
+    uid = users.get_current_user().user_id()
     if request.method == 'PUT':
-        if db.Query(models.Feed).filter('link = ', params['link']).count() == 0:
-            f = models.Feed(link=params['link'], title='Update pending...')
+        if db.Query(models.Feed).filter('link =', params['link']).count() == 0:
+            f = models.Feed(link=params['link'], users=[uid], usercount=1)
             f.put()
-            return http.HttpResponse(json.dumps({'id': f.key().id(),
-                                                 'link': f.link,
-                                                 'title': f.title}),
-                                     mimetype='application/json')
+            return feed_response(f)
         else:
-            return http.HttpResponseNotModified()
+            f = db.Query(models.Feed).filter('link =', params['link']).get()
+            if uid in f.users:
+                return http.HttpResponseNotModified()
+            else:
+                f.users.append(uid)
+                f.usercount += 1
+                f.put()
+                return feed_respose(f)
     elif request.method == 'POST':
         # Modify an existing Feed object.
         pass
     elif request.method == 'DELETE':
         try:
             f = models.Feed.get_by_id(int(params['id']))
-            db.delete(models.Item.all(keys_only=True).filter('feed = ', f))
-            f.delete()
-            return http.HttpResponse()
+            f.users.remove(uid)
+            f.usercount -= 1
+            f.put()
+            return feed_response(f)
         except ValueError:
             return http.HttpResponseBadRequest()
         except db.NotSavedError:
@@ -46,11 +53,21 @@ def feed(request):
         return http.HttpResponseRedirect(urlresolvers.reverse('feeds'))
 
 
+def feed_response(f):
+    return http.HttpResponse(json.dumps({'id': f.key().id(),
+                                         'link': f.link,
+                                         'title': f.title}),
+                             mimetype='application/json')
+
+
 def feeds(request):
     """A view to display all available feeds."""
+    uid = users.get_current_user().user_id()
+    f = db.Query(models.Feed)
+    f.filter('users =', uid)
+    f.order('title').order('link')
     return shortcuts.render(request, 'feeds.html',
-                            {'feeds':
-                             models.Feed.all().order('title').order('link')})
+                            {'feeds': f.run()})
 
 
 def index(request):
@@ -87,7 +104,7 @@ class Feed(sv.Feed):
 
     def items(self, obj):
         items = db.Query(models.Item)
-        items.filter('feed = ', obj)
+        items.filter('feed =', obj)
         items.order('-pubdate')
         return items.run(limit=settings.MAX_ITEMS)
 

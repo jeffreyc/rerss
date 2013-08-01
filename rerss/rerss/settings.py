@@ -1,7 +1,8 @@
 # Django settings for rerss project.
 
-KEEP_FOR = 30
-MAX_ITEMS = 1000
+KEEP_FOR = 30 # Number of days to keep Items before deleting.
+MAX_ITEMS = 1000 # Maximum number of items per feed.
+PURGE_DELAY = 30 # Number of minutes before deleting unattached Feeds.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

@@ -46,6 +46,7 @@ function remove(id) {
           data: 'id=' + id,
           headers: {'X-CSRFToken': getCookie('csrftoken')},
           statusCode: {
+            // TODO: undo behavior
             200: function() { $('#row' + id).remove(); }
           },
           type: 'DELETE'});
