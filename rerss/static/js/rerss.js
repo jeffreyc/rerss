@@ -14,18 +14,22 @@ function getCookie(name) {
   return cookieValue;
 }
 
-function add() {
+function add(link) {
+  if (typeof link === 'undefined')
+    link = $('#add').val();
   $.ajax({url:'/feed/',
-          data: 'link=' + $('#add').val(),
+          data: 'link=' + link,
           headers: {'X-CSRFToken': getCookie('csrftoken')},
           statusCode: {
             200: function(data) {
               $('#empty').remove();
-              $('tbody').append(
-                '          <tr id="row' + data.id + '">\n' +
+              if ($('#row' + data.id).length == 0)
+                $('tbody').append('          <tr id="row' + data.id + '"/>\n');
+              else
+                $('#row' + data.id).empty();
+              $('#row' + data.id).append(
                 '            <td><a href="/feed/' + data.id + '"><abbr title="' + data.link + '">' + data.title + '</abbr></a></td>\n' +
-                '            <td><a href="#" onclick="remove(' + data.id + ')"><span class="glyphicon glyphicon-remove"></span></a></td>\n' +
-                '          </tr>\n');
+                '            <td><a href="#" onclick="remove(' + data.id + ')"><span class="glyphicon glyphicon-remove"></span></a></td>\n');
               $('#add').val('');
               $('#addForm').removeClass('has-error');
             },
@@ -46,8 +50,10 @@ function remove(id) {
           data: 'id=' + id,
           headers: {'X-CSRFToken': getCookie('csrftoken')},
           statusCode: {
-            // TODO: undo behavior
-            200: function() { $('#row' + id).remove(); }
+            200: function(data) {
+              $('#row' + id).empty();
+              $('#row' + id).append('<td colspan="2" class="text-center"><em><abbr title="' + data.link + '">' + data.title + '</abbr></em> has been removed. <a href="#" onclick="add(\'' + data.link + '\')">Undo</a>.</td>');
+            }
           },
           type: 'DELETE'});
   return false;

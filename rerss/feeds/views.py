@@ -47,7 +47,7 @@ def feed(request):
                 f.users.append(uid)
                 f.usercount += 1
                 f.put()
-                return feed_respose(f)
+                return feed_response(f)
     elif request.method == 'POST':
         # Modify an existing Feed object.
         pass
