@@ -1,6 +1,19 @@
 body {
  padding-top: 60px;
 }
+.navbar-brand-nohover {
+ color: #999999;
+ display: bloxk;
+ float: left;
+ font-size: 18px;
+ font-weight: 500;
+ line-height: 20px;
+ margin-left: -15px;
+ margin-right: 5px;
+ max-width: 200px;
+ padding: 15px;
+ text-align: center;
+}
 li.nav-anchor {
  border-radius: 0, 0, 0, 0;
  color: #999999;
