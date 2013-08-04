@@ -100,7 +100,7 @@ class Feed(sv.Feed):
             return http.HttpResponseBadRequest()
 
     def title(self, obj):
-        return obj.title
+        return '%s (via ReRSS)' % obj.title
 
     def link(self, obj):
         return obj.link
