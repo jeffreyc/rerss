@@ -1,0 +1,24 @@
+{% extends "template.html" %}
+
+{% block title %}About ReRSS{% endblock %}
+
+{% block about_class %} class="active"{% endblock %}
+
+{% block body %}
+      <p>
+        ReRSS is a simple Django/Google App Engine application meant to
+        re-syndicate RSS feeds in a post-Google Reader world. It maintains a
+        list of feed URLs, downloads them on a regular basis, and
+        re-syndicates the contents, preventing items from aging off before
+        they can be read. It's meant to be used with stand-alone (i.e.,
+        non-synching) desktop RSS Readers, as this functionality is provided
+        by most RSS synching services.
+      </p>
+      <p>
+        You are welcome to play with this public instance. However, it is not
+        intended to be used as a production service. Feeds may be deleted at
+        any time, and without warning. If you are interested in this
+        application, you are welcome to download the source from
+        <a href="https://bitbucket.org/jeffreyc/rerss">https://bitbucket.org/jeffreyc/rerss</a>.
+      </p>
+{% endblock %}

@@ -13,6 +13,14 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <a class="navbar-brand" href="#">ReRSS</a>
+        <ul class="nav navbar-nav">
+          <li{% block feeds_class %}{% endblock %}><a href="{% url 'feeds' %}">feeds</a></li>
+          <li{% block about_class %}{% endblock %}><a href="{% url 'about' %}">about</a></li>
+          {#<li{% block contact_class %}{% endblock %}><a href="{% url 'contact' %}">Contact</a></li>#}
+        </ul>
+        <ul class="nav navbar-nav pull-right">
+          <li class="nav-anchor">Welcome, {{ user.nickname }}.</li>
+        </ul>
       </div>
     </div>
     <div class="container">

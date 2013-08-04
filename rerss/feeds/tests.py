@@ -40,6 +40,7 @@ class TestViews(test.SimpleTestCase):
     def tearDown(self):
         self.testbed.deactivate()
 
+    def test_about(self): pass
     def test_feed_delete(self): pass
     def test_feed_delete_bad_id(self): pass
     def test_feed_delete_not_saved(self): pass

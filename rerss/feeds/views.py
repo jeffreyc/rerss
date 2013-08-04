@@ -12,6 +12,12 @@ from google.appengine.ext import db
 from feeds import models
 
 
+def about(request):
+    """Renders the about template."""
+    return shortcuts.render(request, 'about.html',
+                            {'user': users.get_current_user(),})
+
+
 def feed_response(f):
     return http.HttpResponse(json.dumps({'id': f.key().id(),
                                          'link': f.link,
@@ -62,12 +68,12 @@ def feed(request):
 
 def feeds(request):
     """A view to display all available feeds."""
-    uid = users.get_current_user().user_id()
+    user = users.get_current_user()
     f = db.Query(models.Feed)
-    f.filter('users =', uid)
+    f.filter('users =', user.user_id())
     f.order('title').order('link')
     return shortcuts.render(request, 'feeds.html',
-                            {'feeds': f.run()})
+                            {'feeds': f.run(), 'user': user,})
 
 
 def index(request):
