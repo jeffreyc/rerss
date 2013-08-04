@@ -60,7 +60,7 @@ class Harvester(webapp2.RequestHandler):
 
     def update_datastore(self, feed, d, dt):
         logging.debug('Updating %s' % feed)
-        if d.feed.description:
+        if d.feed.has_key('description') and d.feed.description:
             feed.description = d.feed.description
         if d.feed.title:
             feed.title = d.feed.title
