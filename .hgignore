@@ -4,3 +4,4 @@ syntax: glob
 *.pyc
 *~
 .DS_Store
+settings_private.py

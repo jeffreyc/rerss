@@ -1,4 +1,5 @@
-# Django settings for rerss project.
+from settings_private import *
+
 
 KEEP_FOR = 30 # Number of days to keep Items before deleting.
 MAX_ITEMS = 1000 # Maximum number of items per feed.
@@ -82,8 +83,7 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'elh(=2_=9z_068$zmvs(3!k!@ug_x+9d!gq5a3gzmx0roc3+$2'
+# SECRET_KEY is in settings_private.py.
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -94,7 +94,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     #'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.contrib.messages.middleware.MessageMiddleware',
@@ -115,11 +115,11 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     #'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    #'django.contrib.contenttypes',
+    #'django.contrib.sessions',
     #'django.contrib.sites',
     #'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
