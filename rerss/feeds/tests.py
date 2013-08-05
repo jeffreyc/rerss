@@ -35,17 +35,32 @@ class TestViews(test.SimpleTestCase):
         self.testbed.activate()
         self.testbed.init_datastore_v3_stub()
         self.testbed.init_user_stub()
+        self.testbed.setup_env(USER_EMAIL='user@host.domain', USER_ID='1',
+                               overwrite=True)
         self.client = client.Client()
 
     def tearDown(self):
         self.testbed.deactivate()
 
-    def test_about(self): pass
+    def test_about(self):
+        response = self.client.get('/about/')
+        self.assertEqual(response.status_code, 200)
+
     def test_feed_delete(self): pass
-    def test_feed_delete_bad_id(self): pass
+    def test_feed_delete_bad_id(self):
+        response = self.client.delete('/feed/', 'id=a')
+        self.assertEqual(response.status_code, 400)
+
     def test_feed_delete_not_saved(self): pass
-    def test_feed_get(self): pass
-    def test_feed_post(self): pass
+
+    def test_feed_get(self):
+        response = self.client.get('/feed/')
+        self.assertEqual(response.status_code, 302)
+
+    def test_feed_post(self):
+        response = self.client.post('/feed/')
+        self.assertEqual(response.status_code, 501)
+
     def test_feed_put_adds_user_to_existing(self): pass
     def test_feed_put_creates_new(self): pass
     def test_feed_put_user_in_users_not_modified(self): pass
@@ -53,7 +68,10 @@ class TestViews(test.SimpleTestCase):
     def test_feed_with_id_get(self): pass
     def test_feed_with_id_not_found(self): pass
     def test_feeds_feeds(self): pass
-    def test_feeds_no_feeds(self): pass
+
+    def test_feeds_no_feeds(self):
+        response = self.client.get('/feeds/')
+        self.assertEqual(response.status_code, 200)
 
     def test_index(self):
         response = self.client.get('/')

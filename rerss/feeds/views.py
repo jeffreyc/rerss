@@ -50,7 +50,7 @@ def feed(request):
                 return feed_response(f)
     elif request.method == 'POST':
         # Modify an existing Feed object.
-        pass
+        return http.HttpResponse(content='Not Implemented', status=501)
     elif request.method == 'DELETE':
         try:
             f = models.Feed.get_by_id(int(params['id']))
